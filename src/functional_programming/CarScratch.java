@@ -36,7 +36,8 @@ public class CarScratch {
                 Car.withGasColorPassengers(6, "Red","Ender", "Hyrum", "Locke","Bonzo")
         );
         showAll(cars);
-        showAll(getCarsByCriterion(cars, new Car.RedCarCriterion()));
+        //use factory method instead of constants
+        showAll(getCarsByCriterion(cars, Car.getRedCarCriterion()));
         showAll(getCarsByCriterion(cars, new Car.GasLevelCarCriterion(6)));
         cars.sort(new Car.PassengerCountOrder());
         showAll(cars);
