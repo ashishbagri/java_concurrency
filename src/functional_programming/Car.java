@@ -70,7 +70,11 @@ public class Car {
         }
     }
 
-    static class GasLevelCarCriterion implements  CarCriterion {
+    public static final CarCriterion getGasLevelCarCriterion(int gasLevel){
+        return new GasLevelCarCriterion(gasLevel);
+    }
+
+    private static class GasLevelCarCriterion implements  CarCriterion {
 
         private final int threshold;
 

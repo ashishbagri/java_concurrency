@@ -38,7 +38,7 @@ public class CarScratch {
         showAll(cars);
         //use factory method instead of constants
         showAll(getCarsByCriterion(cars, Car.getRedCarCriterion()));
-        showAll(getCarsByCriterion(cars, new Car.GasLevelCarCriterion(6)));
+        showAll(getCarsByCriterion(cars, Car.getGasLevelCarCriterion(6)));
         cars.sort(new Car.PassengerCountOrder());
         showAll(cars);
     }
