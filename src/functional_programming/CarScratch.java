@@ -41,6 +41,8 @@ public class CarScratch {
         showAll(getCarsByCriterion(cars, Car.getGasLevelCarCriterion(6)));
         cars.sort(new Car.PassengerCountOrder());
         showAll(cars);
+        cars.sort(Car.getGasComparator());
+        showAll(cars);
     }
 }
 

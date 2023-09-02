@@ -60,15 +60,7 @@ public class Car {
         return RED_CAR_CRITERION;
     }
 
-    private static final RedCarCriterion RED_CAR_CRITERION = new RedCarCriterion();
-
-    static class RedCarCriterion implements CarCriterion {
-
-        @Override
-        public boolean test(Car c) {
-            return c.getColor().equalsIgnoreCase("Red");
-        }
-    }
+    private static final CarCriterion RED_CAR_CRITERION = c -> c.getColor().equalsIgnoreCase("Red");;
 
     public static final CarCriterion getGasLevelCarCriterion(int gasLevel){
         return new GasLevelCarCriterion(gasLevel);
@@ -96,4 +88,11 @@ public class Car {
         }
     }
 
+    public static Comparator<Car> getGasComparator() {
+        return gasComparator;
+    }
+
+    private static final Comparator<Car> gasComparator = (o1, o2) -> {
+            return o1.gasLevel - o2.gasLevel;
+    };
 }
