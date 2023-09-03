@@ -1,9 +1,6 @@
 package functional_programming;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Car {
@@ -44,6 +41,11 @@ public class Car {
 
     public List<String> getTruckContents() {
         return truckContents;
+    }
+
+    public Optional<List<String>> getTruckContentsOpt() {
+
+        return Optional.ofNullable(truckContents);
     }
 
     @Override
