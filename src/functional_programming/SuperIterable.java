@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class SuperIterable<E> implements Iterable<E> {
@@ -18,11 +19,11 @@ public class SuperIterable<E> implements Iterable<E> {
     public SuperIterable<E> filter(Predicate<E> predicate){
 
         List<E> list = new ArrayList<>();
-        for(E e : self) {
+        self.forEach(e -> {
             if(predicate.test(e)) {
                 list.add(e);
             }
-        }
+        });
         return new SuperIterable<>(list);
     }
 
@@ -32,6 +33,12 @@ public class SuperIterable<E> implements Iterable<E> {
         }
     }
 
+    public <F> SuperIterable<F> map(Function<E,F> function) {
+        List<F> list = new ArrayList<>();
+        self.forEach(e -> list.add(function.apply(e)));
+        return new SuperIterable<>(list);
+    }
+
     @Override
     public Iterator<E> iterator() {
         return self.iterator();
@@ -39,10 +46,12 @@ public class SuperIterable<E> implements Iterable<E> {
 
     public static void main(String[] args) {
         SuperIterable<String> strings = new SuperIterable<>(Arrays.asList("Red","black","Green"));
-        strings.forEvery( s -> System.out.println(s));
+        strings.forEach( s -> System.out.println(s));
 
         SuperIterable<String> filterdStrings = strings.filter(s -> Character.isUpperCase(s.charAt(0)));
 
-        filterdStrings.forEvery(s -> System.out.println(s));
+        filterdStrings.forEach(s -> System.out.println(s));
+
+        strings.map(s -> s.toUpperCase()).forEach(s -> System.out.println(s));
     }
 }
