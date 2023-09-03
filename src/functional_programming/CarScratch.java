@@ -4,25 +4,41 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-interface CarCriterion {
-    boolean test(Car c);
-}
+import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 
 public class CarScratch {
 
-    public static void showAll(List<Car> cars){
-        for(Car car : cars){
-            System.out.println(car);
+    /**
+     * This function to do compare of two elements and return an int
+     * @param c
+     * @param comp
+     * @param <E>
+     * @return
+     */
+    private static <E> ToIntFunction<E> compareWithThis(E c, Comparator<E> comp) {
+        return x -> comp.compare(c, x);
+    }
+
+    private static <E> Predicate<E> checkwithThis(ToIntFunction<E> toIntFunction) {
+        return e -> toIntFunction.applyAsInt(e) > 0;
+    }
+
+    //Write a predicate to find car have greater gasLvelThanGiven car
+    //Predicate<Car> pred = car ->
+
+    private static <E> void showAll(List<E> list){
+        for(E e : list){
+            System.out.println(e);
         }
         System.out.println("------------------------------");
     }
 
-    public static List<Car> getCarsByCriterion(Iterable<Car> in, CarCriterion carCriterion){
-        List<Car> output = new ArrayList<>();
-        for(Car c : in){
-            if(carCriterion.test(c))
-                output.add(c);
+    private static <E> List<E> getByCriterion(Iterable<E> in, Predicate<E> criterion){
+        List<E> output = new ArrayList<>();
+        for(E e : in){
+            if(criterion.test(e))
+                output.add(e);
         }
         return output;
     }
@@ -37,12 +53,25 @@ public class CarScratch {
         );
         showAll(cars);
         //use factory method instead of constants
-        showAll(getCarsByCriterion(cars, Car.getRedCarCriterion()));
-        showAll(getCarsByCriterion(cars, Car.getGasLevelCarCriterion(6)));
+        showAll(getByCriterion(cars, Car.getRedCarCriterion()));
+        showAll(getByCriterion(cars, Car.getGasLevelCarCriterion(6)));
         cars.sort(new Car.PassengerCountOrder());
         showAll(cars);
         cars.sort(Car.getGasComparator());
         showAll(cars);
+        showAll(getByCriterion(cars, c -> c.getGasLevel()  > 6));
+
+        Predicate<Car> level7 = Car.getGasLevelCarCriterion(7);
+        showAll(getByCriterion(cars, level7));
+        showAll(getByCriterion(cars, level7.negate()));
+
+        showAll(getByCriterion(cars, Car.getRedCarCriterion().and(Car.getGasLevelCarCriterion(6))));
+
+        Car bert = Car.withGasColorPassengers(5, "White");
+        ToIntFunction<Car> changeToInt = compareWithThis(bert, (c1, c2) -> c1.getGasLevel() - c2.getGasLevel());
+        Predicate<Car> isTrue = checkwithThis(changeToInt);
+        showAll(getByCriterion(cars, isTrue));
+
     }
 }
 

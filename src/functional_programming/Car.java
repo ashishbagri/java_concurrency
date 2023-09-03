@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Car {
     private final int gasLevel;
@@ -20,8 +21,7 @@ public class Car {
 
     public static Car withGasColorPassengers(int gas, String color, String... passengers){
         List<String> p = Collections.unmodifiableList(Arrays.asList(passengers));
-        Car self = new Car(gas, color, p, null);
-        return self;
+        return new Car(gas, color, p, null);
     }
 
     public static Car withGasColorPassengersAndTrunk(int gas, String  color, String... passengers){
@@ -56,30 +56,21 @@ public class Car {
                 '}';
     }
 
-    public static final CarCriterion getRedCarCriterion(){
+    public static final Predicate<Car> getRedCarCriterion(){
         return RED_CAR_CRITERION;
     }
 
-    private static final CarCriterion RED_CAR_CRITERION = c -> c.getColor().equalsIgnoreCase("Red");;
+    private static final Predicate<Car> RED_CAR_CRITERION = c -> c.getColor().equalsIgnoreCase("Red");;
 
-    public static final CarCriterion getGasLevelCarCriterion(int gasLevel){
-        return new GasLevelCarCriterion(gasLevel);
+    public static final Predicate<Car> getGasLevelCarCriterion(int gasLevel){
+        return c -> c.getGasLevel() >= gasLevel;
     }
 
-    private static class GasLevelCarCriterion implements  CarCriterion {
+    public static final Predicate<Car> getColorCriteria(String... colors){
 
-        private final int threshold;
+        return c -> Arrays.asList(colors).contains(c.getColor());
 
-        public GasLevelCarCriterion(int threshold) {
-            this.threshold = threshold;
-        }
-
-        @Override
-        public boolean test(Car c) {
-            return c.getGasLevel() >= threshold;
-        }
     }
-
     static class PassengerCountOrder implements Comparator<Car> {
 
         @Override
@@ -92,7 +83,5 @@ public class Car {
         return gasComparator;
     }
 
-    private static final Comparator<Car> gasComparator = (o1, o2) -> {
-            return o1.gasLevel - o2.gasLevel;
-    };
+    private static final Comparator<Car> gasComparator = Comparator.comparingInt(o -> o.gasLevel);
 }
